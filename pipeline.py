@@ -4,8 +4,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 from scorer import score_listing
 from postcodes import SA_SUBURBS
-from domain_
-scraper import scrape_all
+from domain_scraper import scrape_all
 
 logging.basicConfig(
     filename='/opt/sa-property/data/logs/pipeline.log',
