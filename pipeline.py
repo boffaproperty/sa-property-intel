@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from datetime import datetime
 from scorer import score_listing
 from postcodes import SA_SUBURBS
+from scraper import scrape_all
 
 logging.basicConfig(
     filename='/opt/sa-property/data/logs/pipeline.log',
@@ -125,20 +126,20 @@ def send_email(properties):
         s.send_message(msg)
     logging.info(f"Email sent — {len(properties)} properties")
 
-DEMO_LISTINGS = [
-    {"listing_id":"rea-001","address":"12 Caernarvon Crescent","suburb":"Salisbury","postcode":"5108","region":"north","price":618000,"bedrooms":4,"days_on_market":6,"url":"https://realestate.com.au"},
-    {"listing_id":"rea-002","address":"7 Edison Drive","suburb":"Mawson Lakes","postcode":"5095","region":"north","price":655000,"bedrooms":4,"days_on_market":5,"url":"https://realestate.com.au"},
-    {"listing_id":"rea-003","address":"3 McFarlane Street","suburb":"Elizabeth","postcode":"5112","region":"north","price":620000,"bedrooms":3,"days_on_market":4,"url":"https://realestate.com.au"},
-    {"listing_id":"rea-004","address":"26 Seaford Rise","suburb":"Seaford","postcode":"5163","region":"south","price":658000,"bedrooms":4,"days_on_market":7,"url":"https://realestate.com.au"},
-    {"listing_id":"rea-005","address":"22 McCracken Drive","suburb":"Goolwa","postcode":"5212","region":"fleurieu","price":618000,"bedrooms":3,"days_on_market":21,"url":"https://realestate.com.au"},
-]
+def get_listings():
+    print("Scraping live listings...")
+    return scrape_all(
+        min_price=600000,
+        max_price=900000,
+        min_beds=3,
+    )
 
 def run_scan():
     logging.info("Scan started")
     init_db()
     new_a_grade = []
 
-    for listing in DEMO_LISTINGS:
+    for listing in get_listings():
         if not is_new(listing["listing_id"]):
             continue
         scored = score_listing(
