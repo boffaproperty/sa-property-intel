@@ -11,13 +11,14 @@ client = ScrapflyClient(key=SCRAPFLY_KEY)
 def search_suburb(suburb_name, postcode, min_price=600000,
                   max_price=900000, min_beds=3):
     slug = suburb_name.lower().replace(" ", "-")
-    url = (
-        f"https://www.realestate.com.au/buy/property-house"
-        f"/in-{slug},+sa+{postcode}/"
-        f"?minprice={min_price}&maxprice={max_price}"
-        f"&minbedrooms={min_beds}&propertytype=house"
-        f"&sortType=date-desc"
-    )
+url = (
+    f"https://www.realestate.com.au/buy/"
+    f"property-house-between-{min_price}-{max_price}-"
+    f"in-{slug},+sa+{postcode}/"
+    f"?minbedrooms={min_beds}"
+    f"&propertytype=house"
+    f"&sortType=date-desc"
+)
     try:
         result = client.scrape(ScrapeConfig(
             url=url,
